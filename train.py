@@ -54,7 +54,7 @@ f, sheet_train, sheet_val = init_excel(kind='train')
 if os.path.exists('./AtJ_model/AtJ_model.pt'):
     net = torch.load('./AtJ_model/AtJ_model.pt')
 else:
-    net = AtJ()      #.cuda
+    net = AtJ().cuda()      #.cuda
 
 if not os.path.exists(save_path):
     os.makedirs(save_path)
