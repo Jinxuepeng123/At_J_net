@@ -6,12 +6,7 @@ img=cv2.imread('D:/picture/9.png')
 
 
 
-transform = transforms.Compose([transforms.ToTensor()])
 
-img1=transform(img)
-img1=img1.numpy()
-img2=1-img1
-img2=img2*255
 img2 = np.rollaxis(img2, 0, 3)
 img2 = img2.astype('uint8')
 cv2.imshow('kk',img2)
