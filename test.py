@@ -30,7 +30,7 @@ test_path = data_path+'nyu/test/'
 gth_path = data_path+'nyu/gth/'
 t_path = data_path+'nyu/transmission/'
 
-BATCH_SIZE = 1
+BATCH_SIZE = 2
 weight = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 excel_test_line = 1
 
