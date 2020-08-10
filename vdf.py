@@ -2,7 +2,7 @@ import cv2
 from torchvision import transforms
 import numpy as np
 from PIL import Image
-img=cv2.imread('D:/picture/6.png')
+img=cv2.imread('D:/picture/9.png')
 
 
 
