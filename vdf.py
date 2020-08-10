@@ -15,6 +15,5 @@ img2=img2*255
 img2 = np.rollaxis(img2, 0, 3)
 img2 = img2.astype('uint8')
 cv2.imshow('kk',img2)
-cv2.imshow('kl',img)
 cv2.waitKey(0)
 
