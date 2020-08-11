@@ -4,11 +4,11 @@ import math
 import torch.nn.functional
 from utils.vgg import Vgg16
 
-l2_loss_fn = torch.nn.MSELoss(reduction='mean')
-losser = MS_SSIM(max_val=1, channel=3)
-t_losser = MS_SSIM(max_val=1, channel=1)
-loss_mse = torch.nn.MSELoss()
-vgg = Vgg16().type(torch.FloatTensor)
+l2_loss_fn = torch.nn.MSELoss(reduction='mean').cuda()
+losser = MS_SSIM(max_val=1, channel=3).cuda()
+t_losser = MS_SSIM(max_val=1, channel=1).cuda()
+loss_mse = torch.nn.MSELoss().cuda()
+vgg = Vgg16().type(torch.cuda.FloatTensor).cuda()
 
 
 def l2_loss(output, gth):
@@ -31,19 +31,6 @@ def vgg_loss(output, gth):
     return sum_loss
 
 
-def color_loss(input_image, output_image):
-    vec1 = input_image.view([-1, 3])
-    vec2 = output_image.view([-1, 3])
-    clip_value = 0.999999
-    norm_vec1 = torch.nn.functional.normalize(vec1)
-    norm_vec2 = torch.nn.functional.normalize(vec2)
-    dot = norm_vec1 * norm_vec2
-    dot = dot.mean(dim=1)
-    dot = torch.clamp(dot, -clip_value, clip_value)
-    angle = torch.acos(dot) * (180 / math.pi)
-    return angle.mean()
-
-
 def loss_function(image, weight):
     # J, A, t, gt_image, A_gth, t_gth, J_reconstruct, haze_reconstruct, haze_image
     J, A, t, gt_image, J_reconstruct, haze_reconstruct, haze_image = image
@@ -62,6 +49,7 @@ def loss_function(image, weight):
     for i in range(len(loss_train)):
         loss_sum = loss_sum + loss_train[i] * weight[i]
         loss_train[i] = loss_train[i].item()
+        print('ok',loss_train[i])
         # print("i=%d" % i)
         # print(loss_train[i])
         # print(loss_train[i] * weight[i])

@@ -15,7 +15,7 @@ class AtJDataSet(Dataset):
         # print(path)
         self.flag = flag
         self.transform1 = transform1
-        self.dark_path, self.gt_path=path
+        self.dark_path, self.gt_path = path
         self.dark_data_list = os.listdir(self.dark_path)
         print('ok')
         self.gt_data_list = os.listdir(self.gt_path)
@@ -53,8 +53,8 @@ class AtJDataSet(Dataset):
             dark_image = self.transform1(dark_image)
             gt_image = self.transform1(gt_image)
 
-        dark_image = dark_image.cuda()
-        gt_image = gt_image.cuda()
+        dark_image = dark_image
+        gt_image = gt_image
         if self.flag == 'train':
             return name, dark_image, gt_image
         elif self.flag == 'test':
