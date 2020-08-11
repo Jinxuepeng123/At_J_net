@@ -34,7 +34,7 @@ accumulation_steps = 8  # 梯度积累的次数，类似于batch-size=64
 # itr_to_lr = 10000 // BATCH_SIZE  # 训练10000次后损失下降50%
 itr_to_excel = 8 // BATCH_SIZE  # 训练64次后保存相关数据到excel
 
-weight = [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+weight = [ 1, 1, 1, 1, 1, 1, 1, 1, 1]
 loss_num = len(weight)  # 包括参加训练和不参加训练的loss
 
 data_path = './input/data/'
@@ -141,9 +141,9 @@ for epoch in range(EPOCH):
     val_loss = 0
     with torch.no_grad():
         net.eval()
-        for name,haze_image, gt_image, A_gth, t_gth in val_data_loader:
-            J, A, t, J_reconstruct, haze_reconstruct = net(haze_image)
-            loss_image = [J, A, t, gt_image, A_gth, t_gth, J_reconstruct, haze_reconstruct, haze_image]
+        for name,dark_image, gt_image in val_data_loader:
+            J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
+            loss_image = [J, A, t, gt_image,J_reconstruct, haze_reconstruct, change(dark_image)]
             loss, temp_loss = loss_function(loss_image, weight)
 
             loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
