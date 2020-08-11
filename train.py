@@ -38,10 +38,10 @@ weight = [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 loss_num = len(weight)  # 包括参加训练和不参加训练的loss
 
 data_path = './input/data/'
-train_haze_path = data_path + 'nyu/train/'  # 去雾训练集的路径
-val_haze_path = data_path + 'nyu/val/'  # 去雾验证集的路径
-gt_path = data_path + 'nyu/gth/'
-t_path = data_path + 'nyu/transmission/'
+train_dark_path = data_path + 'nyu/mini_train_dark/'  # 暗图像的路径
+val_dark_path = data_path + 'nyu/mini_val_dark/'  # 暗图像验证集的路径
+gt_path = data_path + 'nyu/mini_train_gth/'      #暗图像的gth
+
 
 save_path = './AtJ_result_nyu_' + time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime()) + '/'
 save_model_name = save_path + 'AtJ_model.pt'  # 保存模型的路径
@@ -62,12 +62,12 @@ if not os.path.exists(save_path):
 # 数据转换模式
 transform = transforms.Compose([transforms.ToTensor()])   #用来归一化的
 # 读取训练集数据
-train_path_list = [train_haze_path, gt_path, t_path]
+train_path_list = [train_dark_path, gt_path]
 train_data = AtJDataSet(transform, train_path_list)
 train_data_loader = DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
 #print(train_data_loader)
 # 读取验证集数据
-val_path_list = [val_haze_path, gt_path, t_path]
+val_path_list = [val_dark_path, gt_path]
 val_data = AtJDataSet(transform, val_path_list)
 val_data_loader = DataLoader(val_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
 
@@ -85,6 +85,15 @@ min_epoch = 0
 itr = 0
 start_time = time.time()
 
+
+def change(image):
+    image = image.numpy()
+    image = 1 - image
+    img = np.rollaxis(image, 0, 3)  # 128x128x3
+    img = img.astype('float32')
+    return img
+
+
 # 开始训练
 print("\nstart to train!")
 for epoch in range(EPOCH):
@@ -92,12 +101,12 @@ for epoch in range(EPOCH):
     train_loss = 0
     loss_excel = [0] * loss_num
     net.train()
-    for name, haze_image, gt_image, A_gth, t_gth in train_data_loader:
+    for name, dark_image, gt_image in train_data_loader:
         index += 1
         itr += 1
-        J, A, t, J_reconstruct, haze_reconstruct = net(haze_image)
+        J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
         # J, A, t = net(haze_image)
-        loss_image = [J, A, t, gt_image, A_gth, t_gth, J_reconstruct, haze_reconstruct, haze_image]
+        loss_image = [J, A, t, gt_image, J_reconstruct, haze_reconstruct, change(dark_image)]
         loss, temp_loss = loss_function(loss_image, weight)
         train_loss += loss.item()
         loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]

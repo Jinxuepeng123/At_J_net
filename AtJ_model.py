@@ -288,7 +288,7 @@ class AtJ(nn.Module):
         # x1, x2, x4 = self.encoder_2(x)
         J = self.decoder_J(x, x1, x2, x4)
 
-        t1 = torch.abs((t)) + (10 ** -10)   #这一步的目的?
+        t1 = torch.abs((t)) + (10 ** -10)
         t1 = t1.repeat(1, 3, 1, 1)
 
         haze_reconstruct = J * t + A * (1 - t)
