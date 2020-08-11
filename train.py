@@ -54,7 +54,7 @@ f, sheet_train, sheet_val = init_excel(kind='train')
 if os.path.exists('./AtJ_model/AtJ_model.pt'):
     net = torch.load('./AtJ_model/AtJ_model.pt')
 else:
-    net = AtJ().cuda()      #.cuda
+    net = AtJ()      #.cuda
 
 if not os.path.exists(save_path):
     os.makedirs(save_path)
@@ -87,10 +87,11 @@ start_time = time.time()
 
 
 def change(image):
-    image = image.numpy()
+    image = image.cpu().numpy()
     image = 1 - image
     img = np.rollaxis(image, 0, 3)  # 128x128x3
     img = img.astype('float32')
+    img=torch.tensor(img)
     return img
 
 
