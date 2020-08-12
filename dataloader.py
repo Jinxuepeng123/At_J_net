@@ -56,8 +56,8 @@ class AtJDataSet(Dataset):
         dark_image = dark_image
         gt_image = gt_image
         if self.flag == 'train':
-            return name, dark_image, gt_image
+            return name, 1-dark_image, gt_image
         elif self.flag == 'test':
-            return name, dark_image, gt_image
+            return name, 1-dark_image, gt_image
 
         # if __name__ == '__main__':

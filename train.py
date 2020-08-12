@@ -108,7 +108,7 @@ for epoch in range(EPOCH):
         itr += 1
         J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
         # J, A, t = net(haze_image)
-        loss_image = [J, A, t, gt_image, J_reconstruct, haze_reconstruct, change(dark_image)]
+        loss_image = [J, A, t, gt_image, change(J_reconstruct), change(haze_reconstruct), change(dark_image)]
         loss, temp_loss = loss_function(loss_image, weight)
         train_loss += loss.item()
         loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
@@ -145,7 +145,7 @@ for epoch in range(EPOCH):
         net.eval()
         for name,dark_image, gt_image in val_data_loader:
             J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
-            loss_image = [J, A, t, gt_image,J_reconstruct, haze_reconstruct, change(dark_image)]
+            loss_image = [J, A, t, gt_image,change(J_reconstruct), change(haze_reconstruct), change(dark_image)]
             loss, temp_loss = loss_function(loss_image, weight)
 
             loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]

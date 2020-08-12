@@ -31,12 +31,8 @@ def write_excel(sheet, data_type, line, epoch, itr, loss, weight):
         sheet.write(line, 2 + len(loss), round(train, 6))
     elif data_type == 'test':
         # 0_a=0.86_b=1.01
-        num = int(itr[:-14])
-        air_light = float(itr[-11:-7])
-        beta = float(itr[-4:])
+        num = int(itr)
         sheet.write(line, 0, num)
-        sheet.write(line, 1, air_light)
-        sheet.write(line, 2, beta)
         for i in range(len(loss)):
             sheet.write(line, i + 3, round(loss[i], 6))
             sum_loss += loss[i] * weight[i]
@@ -73,7 +69,6 @@ def init_excel(kind):
         sheet1 = workbook.add_sheet('test', cell_overwrite_ok=True)
         # 通过excel保存训练结果（训练集验证集loss，学习率，训练时间，总训练时间）
         row0 = ["num", "A", "beta",
-                "A_L2", "t_L2", "t_ssim",
                 "J_l2", "J_ssim", "J_vgg",
                 "J_re_l2", "J_re_ssim", "J_re_vgg",
                 "I_re_l2", "I_re_ssim", "I_re_vgg",
