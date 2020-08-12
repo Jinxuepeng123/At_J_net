@@ -291,10 +291,10 @@ class AtJ(nn.Module):
         t1 = torch.abs((t)) + (10 ** -10)
         t1 = t1.repeat(1, 3, 1, 1)
 
-        haze_reconstruct = J * t + A * (1 - t)
+        dark_reconstruct = J * t + A * (1 - t)
         J_reconstruct = (x - A * (1 - t1)) / t1
 
-        return J, A, t, J_reconstruct, haze_reconstruct
+        return 1-J, A, t, 1-J_reconstruct, dark_reconstruct
         # return J
         # return J_reconstruct, A, t
 

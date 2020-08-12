@@ -85,17 +85,6 @@ min_epoch = 0
 itr = 0
 start_time = time.time()
 
-
-def change(image):
-    image = image.cpu().numpy()
-    image = 1 - image
-    #img = np.rollaxis(image, 0, 3)  # 128x128x3
-    img = image.astype('float32')
-    img=torch.tensor(img)
-    #print(img.shape)
-    return img.cuda()
-
-
 # 开始训练
 print("\nstart to train!")
 for epoch in range(EPOCH):
@@ -103,12 +92,12 @@ for epoch in range(EPOCH):
     train_loss = 0
     loss_excel = [0] * loss_num
     net.train()
-    for name, dark_image, gt_image in train_data_loader:
+    for name, dark_pre_image, gt_image in train_data_loader:
         index += 1
         itr += 1
-        J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
+        J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
         # J, A, t = net(haze_image)
-        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, change(dark_image)]
+        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]
         loss, temp_loss = loss_function(loss_image, weight)
         train_loss += loss.item()
         loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
@@ -143,9 +132,9 @@ for epoch in range(EPOCH):
     val_loss = 0
     with torch.no_grad():
         net.eval()
-        for name,dark_image, gt_image in val_data_loader:
-            J, A, t, J_reconstruct, dark_reconstruct = net(change(dark_image))
-            loss_image = [J, A, t, gt_image,J_reconstruct, dark_reconstruct, change(dark_image)]
+        for name,dark_pre_image, gt_image in val_data_loader:
+            J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
+            loss_image = [J, A, t, gt_image,J_reconstruct, dark_reconstruct, dark_pre_image]
             loss, temp_loss = loss_function(loss_image, weight)
 
             loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
