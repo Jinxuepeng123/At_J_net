@@ -54,7 +54,7 @@ f, sheet_train, sheet_val = init_excel(kind='train')
 if os.path.exists('./AtJ_model/AtJ_model.pt'):
     net = torch.load('./AtJ_model/AtJ_model.pt')
 else:
-    net = AtJ()      #.cuda
+    net = AtJ().cuda()      #.cuda
 
 if not os.path.exists(save_path):
     os.makedirs(save_path)
@@ -93,7 +93,7 @@ def change(image):
     img = image.astype('float32')
     img=torch.tensor(img)
     #print(img.shape)
-    return img
+    return img.cuda()
 
 
 # 开始训练
@@ -108,7 +108,7 @@ for epoch in range(EPOCH):
         itr += 1
         J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
         # J, A, t = net(haze_image)
-        loss_image = [J, A, t, gt_image, change(J_reconstruct), change(haze_reconstruct), change(dark_image)]
+        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, change(dark_image)]
         loss, temp_loss = loss_function(loss_image, weight)
         train_loss += loss.item()
         loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
@@ -144,8 +144,8 @@ for epoch in range(EPOCH):
     with torch.no_grad():
         net.eval()
         for name,dark_image, gt_image in val_data_loader:
-            J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
-            loss_image = [J, A, t, gt_image,change(J_reconstruct), change(haze_reconstruct), change(dark_image)]
+            J, A, t, J_reconstruct, dark_reconstruct = net(change(dark_image))
+            loss_image = [J, A, t, gt_image,J_reconstruct, dark_reconstruct, change(dark_image)]
             loss, temp_loss = loss_function(loss_image, weight)
 
             loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]

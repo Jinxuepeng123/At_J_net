@@ -49,9 +49,9 @@ def get_image_for_save(img):
     img = np.squeeze(img)    #3x128x128
     img = img * 255
     img[img < 0] = 0
-    img[img > 255] = 255
-    img = np.rollaxis(img, 0, 3)    #128x128x3
+    img[img > 255] = 255    #128x128x3
     img = img.astype('uint8')
+    print(img.shape)
     return img
 
 
@@ -93,7 +93,7 @@ for name, dark_image, gt_image in test_data_loader:
                                       weight=weight)
         f.save(excel_save)
         im_output_for_save = get_image_for_save(J)
-        filename = name[0] + '.bmp'
+        filename = name[0] + '.jpg'
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
 
 print("Finished!")
