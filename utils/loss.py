@@ -4,11 +4,11 @@ import math
 import torch.nn.functional
 from utils.vgg import Vgg16
 
-l2_loss_fn = torch.nn.MSELoss(reduction='mean').cuda()
-losser = MS_SSIM(max_val=1, channel=3).cuda()
-t_losser = MS_SSIM(max_val=1, channel=1).cuda()
-loss_mse = torch.nn.MSELoss().cuda()
-vgg = Vgg16().type(torch.cuda.FloatTensor).cuda()
+l2_loss_fn = torch.nn.MSELoss(reduction='mean')
+losser = MS_SSIM(max_val=1, channel=3)
+t_losser = MS_SSIM(max_val=1, channel=1)
+loss_mse = torch.nn.MSELoss()
+vgg = Vgg16().type(torch.FloatTensor)
 
 
 def l2_loss(output, gth):

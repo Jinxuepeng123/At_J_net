@@ -54,7 +54,7 @@ f, sheet_train, sheet_val = init_excel(kind='train')
 if os.path.exists('./AtJ_model/AtJ_model.pt'):
     net = torch.load('./AtJ_model/AtJ_model.pt')
 else:
-    net = AtJ().cuda()      #.cuda
+    net = AtJ()      #.cuda
 
 if not os.path.exists(save_path):
     os.makedirs(save_path)
@@ -93,7 +93,7 @@ def change(image):
     img = image.astype('float32')
     img=torch.tensor(img)
     #print(img.shape)
-    return img.cuda()
+    return img
 
 
 # 开始训练
@@ -165,6 +165,7 @@ for epoch in range(EPOCH):
                                  loss=[loss_excel, val_loss, train_loss],
                                  weight=False)
     f.save(excel_save)
+   #print('val_loss=',val_loss)
     if val_loss < min_loss:
         min_loss = val_loss
         min_epoch = epoch

@@ -14,8 +14,8 @@ def gaussian(window_size, sigma):
 def create_window(window_size, sigma, channel):
     _1D_window = gaussian(window_size, sigma).unsqueeze(1) #在第二维上增加一个维度
     _2D_window = _1D_window.mm(_1D_window.t()).float().unsqueeze(0).unsqueeze(0)
-    print(_1D_window.data)
-    print(_2D_window.data)
+    #print(_1D_window.data)
+    #print(_2D_window.data)
     window = Variable(_2D_window.expand(channel, 1, window_size, window_size).contiguous())
     return window
 
@@ -47,8 +47,8 @@ class MS_SSIM(torch.nn.Module):
         C2 = (0.03 * self.max_val) ** 2
         V1 = 2.0 * sigma12 + C2
         V2 = sigma1_sq + sigma2_sq + C2
-        ssim_map = ((2 * mu1_mu2 + C1) * V1) / ((mu1_sq + mu2_sq + C1) * V2)
-        mcs_map = V1 / V2
+        ssim_map = ((2 * mu1_mu2 + C1) * V1) / ((mu1_sq + mu2_sq + C1) * V2+(10**-6))
+        mcs_map = V1 / (V2+(10**-6))
         if size_average:
             return ssim_map.mean(), mcs_map.mean()
 
