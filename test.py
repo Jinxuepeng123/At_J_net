@@ -26,21 +26,13 @@ from utils.save_log_to_excel import *
 # test_visual_path = '/input/data/nyu/test_visual/'
 
 data_path = './input/data/'
-test_path = data_path+'nyu/mini_test_dark/'
-gth_path = data_path+'nyu/mini_test_gth/'
+test_path = data_path+'nyu/test/mini_test_dark/'
+gth_path = data_path+'nyu/test/mini_test_gth/'
 
-BATCH_SIZE = 2
+BATCH_SIZE = 1
 weight = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 excel_test_line = 1
 
-def change(image):
-    image = image.cpu().numpy()
-    image = 1 - image
-    #img = np.rollaxis(image, 0, 3)  # 128x128x3
-    img = image.astype('float32')
-    img=torch.tensor(img)
-    #print(img.shape)
-    return img.cuda()
 
 
 def get_image_for_save(img):
@@ -49,7 +41,8 @@ def get_image_for_save(img):
     img = np.squeeze(img)    #3x128x128
     img = img * 255
     img[img < 0] = 0
-    img[img > 255] = 255    #128x128x3
+    img[img > 255] = 255
+    img = np.rollaxis(img, 0, 3)    #128x128x3
     img = img.astype('uint8')
     print(img.shape)
     return img
@@ -72,14 +65,14 @@ test_data_loader = DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, n
 count = 0
 print(">>Start testing...\n")
 f, sheet_test = init_excel(kind='test')
-for name, dark_image, gt_image in test_data_loader:
+for name, dark_pre_image, gt_image in test_data_loader:
     count += 1
     print('Processing %d...' % count)
     net.eval()
     with torch.no_grad():
         # J = net(haze_image)
-        J, A, t, J_reconstruct, haze_reconstruct = net(change(dark_image))
-        loss_image = [J, A, t, gt_image, J_reconstruct, haze_reconstruct, change(dark_image)]
+        J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
+        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]
         # for i in range(BATCH_SIZE):
         #    print(i)
         # loss_image = [J, gt_image]
@@ -92,8 +85,8 @@ for name, dark_image, gt_image in test_data_loader:
                                       loss=temp_loss,
                                       weight=weight)
         f.save(excel_save)
-        im_output_for_save = get_image_for_save(J)
-        filename = name[0] + '.jpg'
+        im_output_for_save = get_image_for_save(J_reconstruct)
+        filename = name[0] + '.bmp'
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
 
 print("Finished!")
