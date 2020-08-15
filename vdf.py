@@ -1,18 +1,12 @@
 import cv2
 from torchvision import transforms
 import numpy as np
+import os
 from PIL import Image
-img=cv2.imread('D:/picture/6.png')
+dark_path='D:/picture/'
+dark_data_list = os.listdir(dark_path)
 
-
-
-transform = transforms.Compose([transforms.ToTensor()])
-
-img1=transform(img)
-img1=img1.numpy()
-img2=1-img1
-img2=img2*255
-img2 = np.rollaxis(img2, 0, 3)
-img2 = img2.astype('uint8')
-cv2.imshow('kk',img2)
-cv2.waitKey(0)
+for i in range(len(dark_data_list)):
+    name = dark_data_list[i][:-4]
+    img=cv2.imread(dark_path+name+'.jpg')
+    cv2.imwrite('D:/picture2/'+name+'gth'+'.jpg',img)

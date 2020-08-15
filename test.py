@@ -86,7 +86,7 @@ for name, dark_pre_image, gt_image in test_data_loader:
                                       weight=weight)
         f.save(excel_save)
         im_output_for_save = get_image_for_save(J_reconstruct)
-        filename = name[0] + '.bmp'
+        filename = name[0] + 'reconstruct.bmp'
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
 
 print("Finished!")
