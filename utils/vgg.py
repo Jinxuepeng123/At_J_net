@@ -8,7 +8,6 @@ class Vgg16(nn.Module):
         super(Vgg16, self).__init__()
         # features = torch.load(pre_densenet201).features
         model = models.vgg16(pretrained=False)
-        print(model)
         pre = torch.load(r'C:/Users/希望之光/.cache/torch/checkpoints/vgg16-397923af .pth')
         model.load_state_dict(pre)
         features = model.features
@@ -19,7 +18,6 @@ class Vgg16(nn.Module):
 
         for x in range(4):
             self.to_relu_1_2.add_module(str(x), features[x])
-            print(features[x])
         for x in range(4, 9):
             self.to_relu_2_2.add_module(str(x), features[x])
         for x in range(9, 16):

@@ -4,11 +4,11 @@ import math
 import torch.nn.functional
 from utils.vgg import Vgg16
 
-l2_loss_fn = torch.nn.MSELoss(reduction='mean')
-losser = MS_SSIM(max_val=1, channel=3)
-t_losser = MS_SSIM(max_val=1, channel=1)
+l2_loss_fn = torch.nn.MSELoss(reduction='mean').cuda()
+losser = MS_SSIM(max_val=1, channel=3).cuda()
+t_losser = MS_SSIM(max_val=1, channel=1).cuda()
 loss_mse = torch.nn.MSELoss()
-vgg = Vgg16().type(torch.FloatTensor)
+vgg = Vgg16().type(torch.cuda.FloatTensor).cuda()
 
 
 def l2_loss(output, gth):
@@ -49,7 +49,7 @@ def loss_function(image, weight):
     for i in range(len(loss_train)):
         loss_sum = loss_sum + loss_train[i] * weight[i]
         loss_train[i] = loss_train[i].item()
-        print('ok',loss_train[i])
+        #print('ok',loss_train[i])
         # print("i=%d" % i)
         # print(loss_train[i])
         # print(loss_train[i] * weight[i])
