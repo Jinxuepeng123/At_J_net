@@ -8,7 +8,7 @@ class Vgg16(nn.Module):
         super(Vgg16, self).__init__()
         # features = torch.load(pre_densenet201).features
         model = models.vgg16(pretrained=False)
-        pre = torch.load(r'C:/Users/希望之光/.cache/torch/checkpoints/vgg16-397923af .pth')
+        pre = torch.load(r'C:/Users/希望之光/.cache/torch/checkpoints/vgg16-397923af.pth')
         model.load_state_dict(pre)
         features = model.features
         self.to_relu_1_2 = nn.Sequential()
