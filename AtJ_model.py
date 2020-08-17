@@ -257,9 +257,6 @@ class Encoder(nn.Module):
         ## 8 X 8
         x4 = self.trans_block4(self.dense_block4(x3))
 
-        print('x1',x1)
-        print('x1', x2)
-        print('x1', x4)
         return x1, x2, x4
 
 
@@ -299,13 +296,7 @@ class AtJ(nn.Module):
 
         dark_reconstruct = J * t + A * (1 - t)
         J_reconstruct = (x - A * (1 - t1)) / t1
-        print('A=',A)
-        print('t=',t)
-        print('J=',J)
-        print('J_reconstruct=',1-J_reconstruct)
-        print('dark_reconstruct=', 1-dark_reconstruct)
-        return 1-J, A, t, (1-J_reconstruct), dark_reconstruct
+
+        return J, A, t, J_reconstruct, dark_reconstruct
         # return J
         # return J_reconstruct, A, t
-
-

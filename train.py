@@ -95,7 +95,6 @@ for epoch in range(EPOCH):
     for name, dark_pre_image, gt_image in train_data_loader:
         index += 1
         itr += 1
-        print('dark_pre_image=',dark_pre_image)
         J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
         # J, A, t = net(haze_image)
         loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]

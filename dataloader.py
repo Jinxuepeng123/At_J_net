@@ -55,10 +55,9 @@ class AtJDataSet(Dataset):
         dark_image = dark_image.cuda()
         gt_image = gt_image.cuda()
         if self.flag == 'train':
-            print('pre_dark',(1-dark_image))
-            print('gt_image',gt_image)
-            return name, 1-dark_image, gt_image
+
+            return name, 1-dark_image, 1-gt_image
         elif self.flag == 'test':
-            return name, 1-dark_image, gt_image
+            return name, 1-dark_image, 1-gt_image
 
         # if __name__ == '__main__':
