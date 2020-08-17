@@ -47,8 +47,8 @@ class MS_SSIM(torch.nn.Module):
         C2 = (0.03 * self.max_val) ** 2
         V1 = 2.0 * sigma12 + C2
         V2 = sigma1_sq + sigma2_sq + C2
-        ssim_map = ((2 * mu1_mu2 + C1) * V1) / ((mu1_sq + mu2_sq + C1) * V2+(10**-6))
-        mcs_map = V1 / (V2+(10**-6))
+        ssim_map = ((2 * mu1_mu2 + C1) * V1) / ((mu1_sq + mu2_sq + C1) * V2)
+        mcs_map = V1 / (V2)
         if size_average:
             return ssim_map.mean(), mcs_map.mean()
 
