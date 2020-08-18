@@ -108,14 +108,14 @@ for epoch in range(EPOCH):
             # optimizer the net
             optimizer.step()  # update parameters of net
             optimizer.zero_grad()  # reset gradient
-        if np.mod(index, itr_to_excel) == 0:      #itr_to_excel
+        if np.mod(index+1, itr_to_excel) == 0:      #itr_to_excel
             loss_excel = [loss_excel[i] / itr_to_excel for i in range(len(loss_excel))]
-            print('epoch %d, %03d/%d' % (epoch + 1, index, len(train_data_loader)))
+            print('epoch %d, %03d/%d' % (epoch + 1, index+1, len(train_data_loader)))
             print('J_L2=%.5f\n' 'J_SSIM=%.5f\n' 'J_VGG=%.5f\n'
                   'J_re_L2=%.5f\n' 'J_re_SSIM=%.5f\n' 'J_re_VGG=%.5f\n'
                   % (loss_excel[0], loss_excel[1], loss_excel[2], loss_excel[3], loss_excel[4], loss_excel[5]))
             # print('L2=%.5f\n' 'SSIM=%.5f\n' % (loss_excel[0], loss_excel[1]))
-            print_time(start_time, index, EPOCH, len(train_data_loader), epoch)
+            print_time(start_time, index+1, EPOCH, len(train_data_loader), epoch)
             excel_train_line = write_excel(sheet=sheet_train,
                                            data_type='train',
                                            line=excel_train_line,
