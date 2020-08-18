@@ -291,19 +291,10 @@ class AtJ(nn.Module):
 
         t1 = torch.abs((t)) + (10 ** -10)
         t1 = t1.repeat(1, 3, 1, 1)
-        A=torch.abs((A))
-        J=torch.abs((J))
 
-        dark_reconstruct = J * t1 + A * (1 - t1)
+        dark_reconstruct = J * t + A * (1 - t)
         J_reconstruct = (x - A * (1 - t1)) / t1
-        if(J_reconstruct.mean()>1):
-            b=J_reconstruct.max()
-            J_reconstruct=J_reconstruct/b
-        if(dark_reconstruct.mean()<0.5):
-            c = dark_reconstruct.max()
-            dark_reconstruct = dark_reconstruct / c
 
-
-        return J, A, t, J_reconstruct, dark_reconstruct
+        return 1-J, A, t, 1-J_reconstruct, dark_reconstruct
         # return J
         # return J_reconstruct, A, t
