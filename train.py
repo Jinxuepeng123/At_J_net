@@ -24,7 +24,7 @@ import time
 import xlwt
 from utils.ms_ssim import *
 
-LR = 0.0004  # 学习率
+LR = 0.00008  # 学习率
 EPOCH = 40  # 轮次
 BATCH_SIZE = 1  # 批大小
 excel_train_line = 1  # train_excel写入的行的下标
@@ -78,8 +78,6 @@ optimizer = torch.optim.Adam(net.parameters(), lr=LR, weight_decay=1e-5)
   #if param.requires_grad:
     #print(name)
 
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.7)
-
 min_loss = 999999999
 min_epoch = 0
 itr = 0
@@ -96,6 +94,12 @@ for epoch in range(EPOCH):
         index += 1
         itr += 1
         J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
+        if(index%1000==0):
+            print('J',J)
+            print('A', A)
+            print('t', t)
+            print('J_reconstruct', J_reconstruct)
+            print('dark_reconstruct', dark_reconstruct)
         # J, A, t = net(haze_image)
         loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]
         loss, temp_loss = loss_function(loss_image, weight)
@@ -112,8 +116,8 @@ for epoch in range(EPOCH):
             loss_excel = [loss_excel[i] / itr_to_excel for i in range(len(loss_excel))]
             print('epoch %d, %03d/%d' % (epoch + 1, index, len(train_data_loader)))
             print('J_L2=%.5f\n' 'J_SSIM=%.5f\n' 'J_VGG=%.5f\n'
-                  'J_re_L2=%.5f\n' 'J_re_SSIM=%.5f\n' 'J_re_VGG=%.5f\n'
-                  % (loss_excel[0], loss_excel[1], loss_excel[2], loss_excel[3], loss_excel[4], loss_excel[5]))
+                  'J_re_L2=%.5f\n' 'J_re_SSIM=%.5f\n' 'J_re_VGG=%.5f\n' 'losssum=%.5f\n' 'losscurrent=%.5f\n'
+                  % (loss_excel[0], loss_excel[1], loss_excel[2], loss_excel[3], loss_excel[4], loss_excel[5],train_loss,loss))
             # print('L2=%.5f\n' 'SSIM=%.5f\n' % (loss_excel[0], loss_excel[1]))
             print_time(start_time, index, EPOCH, len(train_data_loader), epoch)
             excel_train_line = write_excel(sheet=sheet_train,
@@ -127,7 +131,7 @@ for epoch in range(EPOCH):
             loss_excel = [0] * loss_num
     optimizer.step()
     optimizer.zero_grad()
-    scheduler.step()
+
     loss_excel = [0] * loss_num
     val_loss = 0
     with torch.no_grad():
