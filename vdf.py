@@ -3,11 +3,27 @@ from torchvision import transforms
 import numpy as np
 import os
 from PIL import Image
-dark_path='D:/At_J_net/input/data/nyu/test/mini_test_gth/'
+dark_path='/home/liu/jinxuepeng/fivek_orig_jpg1/test_dark/'
+dark_gth_path='/home/liu/jinxuepeng/fivek_orig_jpg1/test_gth/'
 dark_data_list = os.listdir(dark_path)
+dark_gth_list=os.listdir(dark_gth_path)
+cut_dark_path='/home/liu/jinxuepeng/test_dark_cut/'
+cut_gth_path='/home/liu/jinxuepeng/test_gth_cut/'
+
+if not os.path.exists(cut_dark_path):
+    os.makedirs(cut_dark_path)
+
+if not os.path.exists(cut_gth_path):
+    os.makedirs(cut_gth_path)
 
 for i in range(len(dark_data_list)):
     name = dark_data_list[i][:-4]
-    image = cv2.imread(dark_path + name + '.jpg')
-    cv2.imwrite('D:/picture/'+name+'_gth_'+'.jpg',image)
-
+    dark_image = cv2.imread(dark_path + name + '.jpg')
+    gth_image = cv2.imread(dark_gth_path + name + '.jpg')
+    dark_image=np.array(dark_image)
+    gth_image=np.array(gth_image)
+    dark_image=dark_image[2:2002, 2:2002,: ]
+    gth_image = gth_image[2:2002, 2:2002, :]
+    cv2.imwrite(cut_dark_path+name+'.jpg',dark_image)
+    cv2.imwrite(cut_gth_path+name+'.jpg', gth_image)
+    print(i)

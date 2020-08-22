@@ -25,9 +25,9 @@ from utils.save_log_to_excel import *
 
 # test_visual_path = '/input/data/nyu/test_visual/'
 
-data_path = './input/data/'
-test_path = data_path+'nyu/test/mini_test_dark/'
-gth_path = data_path+'nyu/test/mini_test_gth/'
+data_path = '/home/liu/jinxuepeng/'
+test_path = data_path+'test_dark_cut/'
+gth_path = data_path+'test_gth_cut/'
 
 BATCH_SIZE = 1
 weight = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -71,7 +71,7 @@ for name, dark_pre_image, gt_image in test_data_loader:
     net.eval()
     with torch.no_grad():
         # J = net(haze_image)
-        J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
+        J, A, t, J_reconstruct, dark_reconstruct,J_re,J_reconstruct_re = net(dark_pre_image)
         loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]
         # for i in range(BATCH_SIZE):
         #    print(i)
@@ -88,5 +88,14 @@ for name, dark_pre_image, gt_image in test_data_loader:
         im_output_for_save = get_image_for_save(J_reconstruct)
         filename = name[0] + 'reconstruct.bmp'
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
+        im_output_for_save = get_image_for_save(J)
+        filename = name[0] + 'J.bmp'
+        cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
+        im_output_for_save = get_image_for_save(J_reconstruct_re)
+        filename = name[0] + 'reconstruct_re.bmp'
+        cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
+        im_output_for_save = get_image_for_save(J_re)
+        filename = name[0] + 'J_re.bmp'
+        print('ok')
 
 print("Finished!")
