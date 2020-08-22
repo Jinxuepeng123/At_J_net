@@ -96,6 +96,7 @@ for name, dark_pre_image, gt_image in test_data_loader:
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
         im_output_for_save = get_image_for_save(J_re)
         filename = name[0] + 'J_re.bmp'
+        cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
         print('ok')
 
 print("Finished!")

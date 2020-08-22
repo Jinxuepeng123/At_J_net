@@ -25,29 +25,31 @@ class AtJDataSet(Dataset):
         self.dark_image_dict = {}
         self.gth_image_dict = {}
         # 读入数据
-        print('starting read image data...')
-        for i in range(len(self.dark_data_list)):
-            name = self.dark_data_list[i][:-4]
+        #print('starting read image data...')
+        #for i in range(len(self.dark_data_list)):
+            #name = self.dark_data_list[i][:-4]
             # print(self.haze_path + name + '.png')
-            self.dark_image_dict[name] = cv2.imread(self.dark_path + name + '.jpg')
+            #self.dark_image_dict[name] = cv2.imread(self.dark_path + name + '.jpg')
             # print(self.haze_image_dict[name][0][0][0])
-        print('starting read GroundTruth data...')
-        for i in range(len(self.gt_data_list)):
-            name = self.gt_data_list[i][:-4]
-            self.gth_image_dict[name] = cv2.imread(self.gt_path + name + '.jpg')
+        #print('starting read GroundTruth data...')
+        #for i in range(len(self.gt_data_list)):
+            #name = self.gt_data_list[i][:-4]
+            #self.gth_image_dict[name] = cv2.imread(self.gt_path + name + '.jpg')
 
     def __len__(self):
         return self.length
 
     def __getitem__(self, idx):
         name = self.dark_data_list[idx][:-4]
-        dark_image = self.dark_image_dict[name]
-        gt_image = self.gth_image_dict[name]
+        #dark_image = self.dark_image_dict[name]
+        #gt_image = self.gth_image_dict[name]
         # print(haze_image[0][0][0])
         # print(gt_image[0][0][0])
         # print(A_gth[0][0])
         # print(t_gth[0][0])
 
+        dark_image = cv2.imread(self.dark_path + name + '.jpg')
+        gt_image = cv2.imread(self.gt_path + name + '.jpg')
         if self.transform1:
             dark_image = self.transform1(dark_image)
             gt_image = self.transform1(gt_image)

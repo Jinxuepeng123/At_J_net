@@ -22,8 +22,9 @@ for i in range(len(dark_data_list)):
     gth_image = cv2.imread(dark_gth_path + name + '.jpg')
     dark_image=np.array(dark_image)
     gth_image=np.array(gth_image)
-    dark_image=dark_image[2:2002, 2:2002,: ]
-    gth_image = gth_image[2:2002, 2:2002, :]
-    cv2.imwrite(cut_dark_path+name+'.jpg',dark_image)
-    cv2.imwrite(cut_gth_path+name+'.jpg', gth_image)
-    print(i)
+    if(dark_image.shape[0]>=1028 and dark_image.shape[1]>=1028):
+         dark_image=dark_image[1:1025, 1:1025,: ]
+         gth_image = gth_image[1:1025, 1:1025, :]
+         cv2.imwrite(cut_dark_path+name+'.jpg',dark_image)
+         cv2.imwrite(cut_gth_path+name+'.jpg', gth_image)
+         print(i)
