@@ -85,6 +85,16 @@ for name, dark_pre_image, gt_image in test_data_loader:
                                       loss=temp_loss,
                                       weight=weight)
         f.save(excel_save)
+
+        im_output_for_save = get_image_for_save(dark_pre_image)
+        filename = name[0] + 'dark_pre.bmp'
+        cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
+
+        im_output_for_save = get_image_for_save(gt_image)
+        filename = name[0] + 'gt.jpg'
+        cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
+
+
         im_output_for_save = get_image_for_save(J_reconstruct)
         filename = name[0] + 'reconstruct.bmp'
         cv2.imwrite(os.path.join(save_path, filename), im_output_for_save)
