@@ -33,11 +33,11 @@ def vgg_loss(output, gth):
 def color_loss(input_image, output_image):
     vec1 = input_image.view([-1, 3])
     vec2 = output_image.view([-1, 3])
-    clip_value = 0.999999
+    clip_value = 1.00000
     norm_vec1 = torch.nn.functional.normalize(vec1)
     norm_vec2 = torch.nn.functional.normalize(vec2)
     dot = norm_vec1 * norm_vec2
-    dot = dot.mean(dim=1)
+    dot = 3*dot.mean(dim=1)
     dot = torch.clamp(dot, -clip_value, clip_value)
     angle = torch.acos(dot) * (180 / math.pi)
     return angle.mean()
@@ -45,7 +45,7 @@ def color_loss(input_image, output_image):
 
 def loss_function(image, weight):
     # J, A, t, gt_image, A_gth, t_gth, J_reconstruct, haze_reconstruct, haze_image
-    J, A, t, gt_image, J_reconstruct, haze_reconstruct, haze_image = image
+    J, A, t, gt_image, J_reconstruct, haze_reconstruct, haze_image,haze_image_real = image
     # print(A.size(), A_gth.size())
     loss_train = [l2_loss(J, gt_image),
                   ssim_loss(J, gt_image),
@@ -55,7 +55,13 @@ def loss_function(image, weight):
                   vgg_loss(J_reconstruct, gt_image),
                   l2_loss(haze_reconstruct, haze_image),
                   ssim_loss(haze_reconstruct, haze_image),
-                  vgg_loss(haze_reconstruct, haze_image)]
+                  vgg_loss(haze_reconstruct, haze_image),
+                  l2_loss(haze_image, haze_image_real),
+                  ssim_loss(haze_image, haze_image_real),
+                  vgg_loss(haze_image, haze_image_real),
+                  color_loss(J,gt_image).cuda(),
+                  color_loss(J_reconstruct,gt_image).cuda()
+                  ]
     # vgg_loss(J, gt_image)
     loss_sum = 0
     for i in range(len(loss_train)):

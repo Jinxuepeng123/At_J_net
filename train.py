@@ -34,7 +34,7 @@ accumulation_steps = 8  # 梯度积累的次数，类似于batch-size=64
 # itr_to_lr = 10000 // BATCH_SIZE  # 训练10000次后损失下降50%
 itr_to_excel = 8 // BATCH_SIZE  # 训练64次后保存相关数据到excel
 
-weight = [1, 1, 1, 1, 1, 1, 0, 0, 0]
+weight = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.0001, 0.0001]
 loss_num = len(weight)  # 包括参加训练和不参加训练的loss
 
 data_path = './input/data/'
@@ -94,14 +94,9 @@ for epoch in range(EPOCH):
         index += 1
         itr += 1
         J, A, t, J_reconstruct, dark_reconstruct = net(dark_pre_image)
-        if(index%1000==0):
-            print('J',J)
-            print('A', A)
-            print('t', t)
-            print('J_reconstruct', J_reconstruct)
-            print('dark_reconstruct', dark_reconstruct)
+        dark_reconstruct_real = (1-gt_image)*t+A*(1-t)
         # J, A, t = net(haze_image)
-        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image]
+        loss_image = [J, A, t, gt_image, J_reconstruct, dark_reconstruct, dark_pre_image,dark_reconstruct_real]
         loss, temp_loss = loss_function(loss_image, weight)
         train_loss += loss.item()
         loss_excel = [loss_excel[i] + temp_loss[i] for i in range(len(loss_excel))]
@@ -116,8 +111,12 @@ for epoch in range(EPOCH):
             loss_excel = [loss_excel[i] / itr_to_excel for i in range(len(loss_excel))]
             print('epoch %d, %03d/%d' % (epoch + 1, index, len(train_data_loader)))
             print('J_L2=%.5f\n' 'J_SSIM=%.5f\n' 'J_VGG=%.5f\n'
-                  'J_re_L2=%.5f\n' 'J_re_SSIM=%.5f\n' 'J_re_VGG=%.5f\n' 'losssum=%.5f\n' 'losscurrent=%.5f\n'
-                  % (loss_excel[0], loss_excel[1], loss_excel[2], loss_excel[3], loss_excel[4], loss_excel[5],train_loss,loss))
+                  'J_re_L2=%.5f\n' 'J_re_SSIM=%.5f\n' 'J_re_VGG=%.5f\n''haze_re_l2_loss=%.5f\n' 'haze_re_ssim_loss=%.5f\n' 'haze_re_vgg_loss=%.5f\n'
+                  'haze_re_real_l2_loss=%.5f\n' 'haze_re_real_ssim_loss=%.5f\n' 'haze_re_real_vgg_loss=%.5f\n' 
+                  'J_color_loss=%.5f\n' 'J_re_color_loss=%.5f\n' 'losssum=%.5f\n' 'losscurrent=%.5f\n'
+                  % (loss_excel[0], loss_excel[1], loss_excel[2], loss_excel[3], loss_excel[4], loss_excel[5],
+                     loss_excel[6], loss_excel[7], loss_excel[8], loss_excel[9], loss_excel[10], loss_excel[11],
+                     loss_excel[12], loss_excel[13],train_loss,loss))
             # print('L2=%.5f\n' 'SSIM=%.5f\n' % (loss_excel[0], loss_excel[1]))
             print_time(start_time, index, EPOCH, len(train_data_loader), epoch)
             excel_train_line = write_excel(sheet=sheet_train,
@@ -131,7 +130,14 @@ for epoch in range(EPOCH):
             loss_excel = [0] * loss_num
     optimizer.step()
     optimizer.zero_grad()
-
+    print("A", A)
+    print("t", t)
+    print("J", J)
+    print("gt_image", gt_image)
+    print("J_reconstruct", J_reconstruct)
+    print("dark_reconstruct", dark_reconstruct)
+    print("dark_pre_image", dark_pre_image)
+    print("dark_reconstruct_real", dark_reconstruct_real)
     loss_excel = [0] * loss_num
     val_loss = 0
     with torch.no_grad():

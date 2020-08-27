@@ -50,14 +50,18 @@ def init_excel(kind):
                 "J_l2", "J_ssim", "J_vgg",
                 "J_re_l2", "J_re_ssim", "J_re_vgg",
                 "I_re_l2", "I_re_ssim", "I_re_vgg",
+                "haze_construction_l2","haze_construction_ssim","haze_construction_vgg",
+                "haze_construction_real_l2", "haze_construction_real_ssim", "haze_construction_real_vgg",
                 "loss"]
-        # row0 = ["epoch", "itr", "l2", "ssim", "loss"]
+
         row1 = ["epoch",
                 "J_l2", "J_ssim", "J_vgg",
                 "J_re_l2", "J_re_ssim", "J_re_vgg",
                 "I_re_l2", "I_re_ssim", "I_re_vgg",
+                "haze_construction_l2", "haze_construction_ssim", "haze_construction_vgg",
+                "haze_construction_real_l2", "haze_construction_real_ssim", "haze_construction_real_vgg",
                 "val_loss", "train_loss"]
-        # row1 = ["epoch", "l2", "ssim", "val_loss", "train_loss"]
+
         for i in range(0, len(row0)):
             #print('写入train_excel')
             sheet1.write(0, i, row0[i], set_style('Times New Roman', 220, True))
