@@ -30,6 +30,18 @@ def vgg_loss(output, gth):
                + loss_mse(output_features[3], gth_features[3]) * 0.25
     return sum_loss
 
+def color_loss(input_image, output_image):
+    vec1 = input_image.view([-1, 3])
+    vec2 = output_image.view([-1, 3])
+    clip_value = 0.999999
+    norm_vec1 = torch.nn.functional.normalize(vec1)
+    norm_vec2 = torch.nn.functional.normalize(vec2)
+    dot = norm_vec1 * norm_vec2
+    dot = dot.mean(dim=1)
+    dot = torch.clamp(dot, -clip_value, clip_value)
+    angle = torch.acos(dot) * (180 / math.pi)
+    return angle.mean()
+
 
 def loss_function(image, weight):
     # J, A, t, gt_image, A_gth, t_gth, J_reconstruct, haze_reconstruct, haze_image

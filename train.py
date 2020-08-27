@@ -34,7 +34,7 @@ accumulation_steps = 8  # 梯度积累的次数，类似于batch-size=64
 # itr_to_lr = 10000 // BATCH_SIZE  # 训练10000次后损失下降50%
 itr_to_excel = 8 // BATCH_SIZE  # 训练64次后保存相关数据到excel
 
-weight = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+weight = [1, 1, 1, 1, 1, 1, 0, 0, 0]
 loss_num = len(weight)  # 包括参加训练和不参加训练的loss
 
 data_path = './input/data/'

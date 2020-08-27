@@ -286,6 +286,7 @@ class AtJ(nn.Module):
         A = self.decoder_A(x, x1, x2, x4)
         t = self.decoder_t(x, x1, x2, x4, activation='sig')
 
+
         # x1, x2, x4 = self.encoder_2(x)
         J = self.decoder_J(x, x1, x2, x4)
 
@@ -297,6 +298,7 @@ class AtJ(nn.Module):
         dark_reconstruct = J * t + A * (1 - t)
         J_reconstruct = (x - A * (1 - t1)) / t1
 
-        return 1-J, A, t, 1-J_reconstruct, dark_reconstruct,J,J_reconstruct
+
+        return 1-J, A, t, 1-J_reconstruct, dark_reconstruct
         # return J
         # return J_reconstruct, A, t
